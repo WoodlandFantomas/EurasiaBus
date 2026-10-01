@@ -1,0 +1,244 @@
+﻿
+@using EurasiaBus.Models
+@model IEnumerable<BusTrip>
+
+@{
+    ViewData["Title"] = "Рейсы автобусов";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold text-primary mb-1">
+                <i class="bi bi-bus-front-fill me-2"></i>
+                Рейсы автобусов
+            </h1>
+            <p class="text-muted mb-0">
+                Управление автобусными рейсами EURASIA BUS
+            </p>
+        </div>
+
+        <a asp-controller="Admin"
+           asp-action="AddBusTrip"
+           class="btn btn-primary btn-lg shadow-sm">
+            <i class="bi bi-plus-circle me-2"></i>
+            Добавить рейс
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @TempData["Success"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            @TempData["Error"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-primary text-white py-3">
+            <h5 class="mb-0">
+                <i class="bi bi-list-ul me-2"></i>
+                Список рейсов
+            </h5>
+        </div>
+
+        <div class="card-body p-0">
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Автобус</th>
+                                <th>Отправление</th>
+                                <th>Прибытие</th>
+                                <th>Дата отправления</th>
+                                <th>Дата прибытия</th>
+                                <th>Цена</th>
+                                <th>Мест</th>
+                                <th>Статус</th>
+                                <th class="text-end">Действия</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var trip in Model)
+                            {
+                                var totalSeats = trip.Seats?.Count() ?? 0;
+                                var availableSeats = trip.Seats?.Count(s => s.IsAvailable) ?? 0;
+
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            @trip.BusTripId
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        @if (trip.Bus != null)
+                                        {
+                                            <div class="fw-semibold">
+                                                @trip.Bus.Name
+                                            </div>
+
+                                            @if (!string.IsNullOrEmpty(trip.Bus.RegistrationNumber))
+                                            {
+                                                <small class="text-muted">
+                                                    @trip.Bus.RegistrationNumber
+                                                </small>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Не указан
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (trip.DepartureStop != null)
+                                        {
+                                            <div class="fw-semibold">
+                                                @trip.DepartureStop.City
+                                            </div>
+                                            <small class="text-muted">
+                                                @trip.DepartureStop.Name
+                                            </small>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (trip.ArrivalStop != null)
+                                        {
+                                            <div class="fw-semibold">
+                                                @trip.ArrivalStop.City
+                                            </div>
+                                            <small class="text-muted">
+                                                @trip.ArrivalStop.Name
+                                            </small>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        <div class="fw-semibold">
+                                            @trip.DepartureDateTime.ToString("dd.MM.yyyy")
+                                        </div>
+                                        <small class="text-primary">
+                                            @trip.DepartureDateTime.ToString("HH:mm")
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        <div class="fw-semibold">
+                                            @trip.ArrivalDateTime.ToString("dd.MM.yyyy")
+                                        </div>
+                                        <small class="text-primary">
+                                            @trip.ArrivalDateTime.ToString("HH:mm")
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        <span class="fw-bold text-success">
+                                            € @trip.Price.ToString("N2")
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-success">
+                                            @availableSeats
+                                        </span>
+                                        <span class="text-muted">
+                                            / @totalSeats
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        @if (trip.IsActive)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Активен
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Неактивен
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td class="text-end">
+                                        <form asp-controller="Admin"
+                                              asp-action="DeleteBusTrip"
+                                              asp-route-id="@trip.BusTripId"
+                                              method="post"
+                                              class="d-inline"
+                                              onsubmit="return confirm('Вы действительно хотите удалить этот рейс?');">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="btn btn-outline-danger btn-sm"
+                                                    title="Удалить рейс">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+
+                    <i class="bi bi-bus-front text-primary display-1"></i>
+
+                    <h4 class="mt-3">
+                        Рейсов пока нет
+                    </h4>
+
+                    <p class="text-muted">
+                        Добавьте первый автобусный рейс.
+                    </p>
+
+                    <a asp-controller="Admin"
+                       asp-action="AddBusTrip"
+                       class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Добавить первый рейс
+                    </a>
+
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+

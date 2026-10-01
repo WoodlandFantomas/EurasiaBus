@@ -1,0 +1,154 @@
+﻿@model IEnumerable<EurasiaBus.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Пользователи";
+}
+
+<div class="container-fluid py-4">
+
+    ```
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-people-fill me-2"></i>
+                Пользователи
+            </h2>
+            <div class="text-muted">
+                Зарегистрированные пользователи системы
+            </div>
+        </div>
+
+        <a asp-controller="Admin"
+           asp-action="Dashboard"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Панель администратора
+        </a>
+    </div>
+
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-dark text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-semibold">
+                    <i class="bi bi-person-lines-fill me-2"></i>
+                    Список пользователей
+                </span>
+
+                <span class="badge bg-light text-dark">
+                    @Model.Count()
+                </span>
+            </div>
+        </div>
+
+
+        <div class="card-body p-0">
+
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-striped table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th>Email</th>
+                                <th>Телефон</th>
+                                <th>Подтверждение Email</th>
+                                <th style="width: 180px;">Дата</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @{
+                                int number = 1;
+                            }
+
+                            @foreach (var user in Model)
+                            {
+                                <tr>
+
+                                    <td class="fw-semibold">
+                                        @number
+                                    </td>
+
+                                    <td>
+                                        <div class="fw-semibold">
+                                            @user.Email
+                                        </div>
+
+                                        <small class="text-muted">
+                                            ID: @user.Id
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
+                                        {
+                                            @user.PhoneNumber
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (user.EmailConfirmed)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Подтверждён
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Не подтверждён
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td class="text-muted">
+                                        —
+                                    </td>
+
+                                </tr>
+
+                                number++;
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+
+                    <div class="display-5 text-muted mb-3">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                    <h5>Пользователей пока нет</h5>
+
+                    <p class="text-muted mb-0">
+                        В системе ещё не зарегистрировано ни одного пользователя.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+</div>

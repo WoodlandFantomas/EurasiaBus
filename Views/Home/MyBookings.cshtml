@@ -1,0 +1,273 @@
+﻿@using EurasiaBus.Models
+@model IEnumerable<Booking>
+
+@{
+    ViewData["Title"] = "Мои билеты";
+}
+
+<div class="container py-4">
+
+    ```
+    <div class="eb-page-header mb-4">
+        <div>
+            <h1 class="mb-1">
+                <i class="bi bi-ticket-perforated"></i>
+                Мои билеты
+            </h1>
+            <p class="text-muted mb-0">
+                Ваши автобусные бронирования
+            </p>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="eb-card text-center py-5">
+            <div class="mb-3">
+                <i class="bi bi-ticket-perforated"
+                   style="font-size: 4rem; color: #64748b;"></i>
+            </div>
+
+            <h3>У вас пока нет билетов</h3>
+
+            <p class="text-muted">
+                Найдите подходящий автобусный рейс и оформите бронирование.
+            </p>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-primary mt-2">
+                <i class="bi bi-search"></i>
+                Найти автобус
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var booking in Model)
+            {
+                var trip = booking.BusTrip;
+                var passenger = booking.Passenger;
+                var seat = booking.BusTripSeat;
+                var bus = trip?.Bus;
+
+                <div class="col-12">
+
+                    <div class="eb-card eb-booking-card">
+
+                        <!-- HEADER -->
+                        <div class="eb-booking-header">
+
+                            <div>
+                                <span class="text-muted small">
+                                    Бронирование
+                                </span>
+
+                                <h4 class="mb-0">
+                                    <i class="bi bi-ticket-perforated"></i>
+                                    @(booking.PnrCode ?? "Без PNR")
+                                </h4>
+                            </div>
+
+                            <div>
+                                @if (booking.IsActive &&
+                                    !string.Equals(
+                                        booking.Status,
+                                        "Cancelled",
+                                        StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i>
+                                        @booking.Status
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-x-circle"></i>
+                                        Отменено
+                                    </span>
+                                }
+                            </div>
+
+                        </div>
+
+                        <!-- ROUTE -->
+                        <div class="eb-booking-route">
+
+                            <!-- DEPARTURE -->
+                            <div class="eb-booking-location">
+
+                                <div class="eb-booking-time">
+                                    @if (trip != null)
+                                    {
+                                        @trip.DepartureDateTime.ToString("HH:mm")
+                                    }
+                                </div>
+
+                                <div class="eb-booking-date">
+                                    @if (trip != null)
+                                    {
+                                        @trip.DepartureDateTime.ToString("dd.MM.yyyy")
+                                    }
+                                </div>
+
+                                <div class="eb-booking-city">
+                                    @(trip?.DepartureStop?.City ?? "—")
+                                </div>
+
+                                <div class="eb-booking-station">
+                                    @(trip?.DepartureStop?.Name ?? "—")
+                                </div>
+
+                            </div>
+
+                            <!-- ARROW -->
+                            <div class="eb-booking-arrow">
+                                <i class="bi bi-arrow-right"></i>
+                            </div>
+
+                            <!-- ARRIVAL -->
+                            <div class="eb-booking-location">
+
+                                <div class="eb-booking-time">
+                                    @if (trip != null)
+                                    {
+                                        @trip.ArrivalDateTime.ToString("HH:mm")
+                                    }
+                                </div>
+
+                                <div class="eb-booking-date">
+                                    @if (trip != null)
+                                    {
+                                        @trip.ArrivalDateTime.ToString("dd.MM.yyyy")
+                                    }
+                                </div>
+
+                                <div class="eb-booking-city">
+                                    @(trip?.ArrivalStop?.City ?? "—")
+                                </div>
+
+                                <div class="eb-booking-station">
+                                    @(trip?.ArrivalStop?.Name ?? "—")
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DETAILS -->
+                        <div class="row g-3 mt-3">
+
+                            <div class="col-md-3">
+                                <div class="eb-booking-detail">
+                                    <span>
+                                        <i class="bi bi-person"></i>
+                                        Пассажир
+                                    </span>
+
+                                    <strong>
+                                        @(passenger != null
+                                            ? $"{passenger.FirstName} {passenger.LastName}"
+                                            : "—")
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="eb-booking-detail">
+                                    <span>
+                                        <i class="bi bi-grid-3x3-gap"></i>
+                                        Место
+                                    </span>
+
+                                    <strong>
+                                        @(seat?.SeatNumber ?? "—")
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="eb-booking-detail">
+                                    <span>
+                                        <i class="bi bi-bus-front"></i>
+                                        Автобус
+                                    </span>
+
+                                    <strong>
+                                        @(bus?.Name ?? "—")
+                                    </strong>
+
+                                    @if (!string.IsNullOrWhiteSpace(bus?.RegistrationNumber))
+                                    {
+                                        <small class="text-muted d-block">
+                                            @bus.RegistrationNumber
+                                        </small>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="eb-booking-detail">
+                                    <span>
+                                        <i class="bi bi-cash-stack"></i>
+                                        Стоимость
+                                    </span>
+
+                                    <strong>
+                                        @booking.TicketPrice.ToString("N2") €
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="eb-booking-detail">
+                                    <span>
+                                        <i class="bi bi-calendar-check"></i>
+                                        Бронирование
+                                    </span>
+
+                                    <strong>
+                                        @booking.BookingDate.ToLocalTime().ToString("dd.MM.yyyy")
+                                    </strong>
+
+                                    <small class="text-muted d-block">
+                                        @booking.BookingDate.ToLocalTime().ToString("HH:mm")
+                                    </small>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- ACTIONS -->
+                        <div class="eb-booking-actions mt-4">
+
+                            <a asp-controller="Home"
+                               asp-action="BookingDetails"
+                               asp-route-id="@booking.BookingId"
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-eye"></i>
+                                Подробнее
+                            </a>
+
+                            <a asp-controller="Home"
+                               asp-action="Ticket"
+                               asp-route-id="@booking.BookingId"
+                               class="btn btn-primary">
+                                <i class="bi bi-ticket-perforated"></i>
+                                Билет
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+        </div>
+    }
+    
+
+</div>

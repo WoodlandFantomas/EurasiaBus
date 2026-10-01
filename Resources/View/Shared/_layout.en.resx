@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<!-- Navigation -->
+	<data name="Home" xml:space="preserve"> <value>Home</value> </data>
+	<data name="FAQ" xml:space="preserve"> <value>FAQ</value> </data>
+	<data name="MyBookings" xml:space="preserve"> <value>My Bookings</value> </data>
+	<data name="Administration" xml:space="preserve"> <value>Administration</value> </data>
+	<!-- Account -->
+	<data name="Account" xml:space="preserve"> <value>Account</value> </data>
+	<data name="Login" xml:space="preserve"> <value>Login</value> </data>
+	<data name="Register" xml:space="preserve"> <value>Register</value> </data>
+	<data name="Logout" xml:space="preserve"> <value>Logout</value> </data>
+	<!-- Language -->
+	<data name="Language" xml:space="preserve"> <value>Language</value> </data>
+	<data name="Russian" xml:space="preserve"> <value>Русский</value> </data>
+	<data name="Ukrainian" xml:space="preserve"> <value>Українська</value> </data>
+	<data name="English" xml:space="preserve"> <value>English</value> </data>
+	<!-- User -->
+	<data name="LoggedInAs" xml:space="preserve"> <value>Logged in as</value> </data>
+	<data name="MyTickets" xml:space="preserve"> <value>My Tickets</value> </data>
+	<!-- Site -->
+	<data name="EurasiaBusDescription" xml:space="preserve"> <value>Bus transportation across Europe</value> </data>
+	<data name="AllRightsReserved" xml:space="preserve"> <value>All rights reserved</value> </data>
+</root>

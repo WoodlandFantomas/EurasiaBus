@@ -1,0 +1,69 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+@using EurasiaBus.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="d-flex align-items-center gap-2">
+
+        <span class="text-white">
+            <i class="bi bi-person-circle"></i>
+            @User.Identity?.Name
+        </span>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="btn btn-outline-light btn-sm"
+               asp-controller="Admin"
+               asp-action="Dashboard">
+                <i class="bi bi-speedometer2"></i>
+                Admin
+            </a>
+        }
+
+        <a class="btn btn-outline-light btn-sm"
+           asp-area="Identity"
+           asp-page="/Account/Manage/Index">
+            <i class="bi bi-person-gear"></i>
+            Профиль
+        </a>
+
+        <form asp-area="Identity"
+              asp-page="/Account/Logout"
+              asp-route-returnUrl="@Url.Action("Index", "Home")"
+              method="post"
+              class="d-inline">
+
+            <button type="submit"
+                    class="btn btn-outline-light btn-sm">
+                <i class="bi bi-box-arrow-right"></i>
+                Выйти
+            </button>
+
+        </form>
+
+    </div>
+}
+else
+{
+    <div class="d-flex align-items-center gap-2">
+
+        <a class="btn btn-outline-light btn-sm"
+           asp-area="Identity"
+           asp-page="/Account/Login">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Войти
+        </a>
+
+        <a class="btn btn-light btn-sm"
+           asp-area="Identity"
+           asp-page="/Account/Register">
+            <i class="bi bi-person-plus"></i>
+            Регистрация
+        </a>
+
+    </div>
+}

@@ -1,0 +1,407 @@
+@model EurasiaBus.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking confirmed";
+}
+
+<div class="container py-5">
+
+    ```
+    <div class="text-center mb-4">
+
+        <div class="success-icon mx-auto mb-3">
+            <i class="bi bi-check-lg"></i>
+        </div>
+
+        <h1 class="fw-bold mb-2">
+            Booking confirmed
+        </h1>
+
+        <p class="text-muted mb-1">
+            Your booking has been successfully confirmed.
+        </p>
+
+        <div class="pnr-box mt-3">
+            <span class="pnr-label">PNR</span>
+            <strong>@Model.PnrCode</strong>
+        </div>
+
+    </div>
+
+
+    <div class="booking-card mx-auto">
+
+        <!-- Route -->
+
+        <div class="route-section">
+
+            <div class="route-city">
+
+                <span class="route-label">
+                    From
+                </span>
+
+                <strong>
+                    @Model.BusTrip.DepartureStop.City
+                </strong>
+
+            </div>
+
+
+            <div class="route-arrow">
+                <i class="bi bi-arrow-right"></i>
+            </div>
+
+
+            <div class="route-city text-end">
+
+                <span class="route-label">
+                    To
+                </span>
+
+                <strong>
+                    @Model.BusTrip.ArrivalStop.City
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <hr />
+
+
+        <!-- Trip information -->
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+
+                <div class="info-item">
+
+                    <div class="info-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+
+                    <div>
+
+                        <span class="info-label">
+                            Departure
+                        </span>
+
+                        <strong>
+                            @Model.BusTrip.DepartureDateTime.ToString("dd MMM yyyy")
+                        </strong>
+
+                        <span class="info-secondary">
+                            @Model.BusTrip.DepartureDateTime.ToString("HH:mm")
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="info-item">
+
+                    <div class="info-icon">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <span class="info-label">
+                            Passenger
+                        </span>
+
+                        <strong>
+                            @Model.Passenger.FirstName
+                            @Model.Passenger.LastName
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="info-item">
+
+                    <div class="info-icon">
+                        <i class="bi bi-grid-3x3-gap-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <span class="info-label">
+                            Seat
+                        </span>
+
+                        <strong class="seat-number">
+                            @Model.BusTripSeat.SeatNumber
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="info-item">
+
+                    <div class="info-icon">
+                        <i class="bi bi-currency-euro"></i>
+                    </div>
+
+                    <div>
+
+                        <span class="info-label">
+                            Price
+                        </span>
+
+                        <strong>
+                            € @Model.TicketPrice.ToString("N2")
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <hr />
+
+
+        <!-- Status -->
+
+        <div class="status-row">
+
+            <span>
+                Booking status
+            </span>
+
+            <span class="badge bg-success px-3 py-2">
+                <i class="bi bi-check-circle-fill me-1"></i>
+                @Model.Status
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Actions -->
+
+    <div class="text-center mt-4">
+
+        <a asp-controller="Payment"
+           asp-action="TicketPdf"
+           asp-route-id="@Model.BookingId"
+           class="btn btn-primary btn-lg px-4 me-2">
+
+            <i class="bi bi-file-earmark-pdf-fill me-2"></i>
+            Download PDF ticket
+
+        </a>
+
+
+        <a asp-controller="Booking"
+           asp-action="MyBookings"
+           class="btn btn-outline-primary btn-lg px-4">
+
+            <i class="bi bi-ticket-perforated me-2"></i>
+            My bookings
+
+        </a>
+
+    </div>
+
+
+    <div class="text-center mt-4">
+
+        <small class="text-muted">
+
+            Please keep your PNR
+            <strong>@Model.PnrCode</strong>
+            for your trip.
+
+        </small>
+
+    </div>
+    ```
+
+</div>
+
+<style>
+
+    .success-icon {
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #d1e7dd;
+        color: #198754;
+        font-size: 38px;
+    }
+
+
+    .pnr-box {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 18px;
+        border-radius: 30px;
+        background: #e7f1ff;
+        color: #0d6efd;
+    }
+
+    .pnr-label {
+        font-size: .75rem;
+        color: #6c757d;
+        font-weight: 600;
+        letter-spacing: .5px;
+    }
+
+
+    .booking-card {
+        max-width: 700px;
+        background: #fff;
+        border: 1px solid #e8ebef;
+        border-radius: 22px;
+        padding: 28px;
+        box-shadow: 0 15px 40px rgba(0,0,0,.07);
+    }
+
+
+    .route-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .route-city {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+        .route-city strong {
+            font-size: 1.25rem;
+        }
+
+    .route-label {
+        font-size: .72rem;
+        text-transform: uppercase;
+        color: #8a929b;
+        letter-spacing: .6px;
+    }
+
+    .route-arrow {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e7f1ff;
+        color: #0d6efd;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .info-icon {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f0f5fb;
+        color: #0d6efd;
+        font-size: 18px;
+    }
+
+    .info-item > div:last-child {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .info-label {
+        font-size: .72rem;
+        color: #8a929b;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+    }
+
+    .info-secondary {
+        color: #6c757d;
+        font-size: .85rem;
+    }
+
+    .seat-number {
+        color: #0d6efd;
+    }
+
+
+    .status-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #6c757d;
+        font-size: .9rem;
+    }
+
+
+    @@media (max-width: 575.98px) {
+
+        .booking-card {
+            padding: 20px;
+        }
+
+        .route-section {
+            gap: 10px;
+        }
+
+        .route-city strong {
+            font-size: 1rem;
+        }
+
+        .route-arrow {
+            width: 36px;
+            height: 36px;
+            font-size: 16px;
+        }
+
+        .btn-lg {
+            width: 100%;
+            margin: 5px 0 !important;
+        }
+    }
+
+</style>

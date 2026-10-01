@@ -1,0 +1,662 @@
+@using System.Globalization
+
+@{
+    var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    string HomeText =
+        lang == "uk" ? "Головна" :
+        lang == "en" ? "Home" :
+        "Главная";
+
+    string FaqText =
+        lang == "uk" ? "Часті запитання" :
+        lang == "en" ? "FAQ" :
+        "Часто задаваемые вопросы";
+
+    string NotificationsText =
+        lang == "uk" ? "Сповіщення" :
+        lang == "en" ? "Notifications" :
+        "Уведомления";
+
+    string MyBookingsText =
+        lang == "uk" ? "Мої бронювання" :
+        lang == "en" ? "My bookings" :
+        "Мои бронирования";
+
+    string AdminText =
+        lang == "uk" ? "Адміністратор" :
+        lang == "en" ? "Admin" :
+        "Администратор";
+
+    string LoginText =
+        lang == "uk" ? "Увійти" :
+        lang == "en" ? "Login" :
+        "Войти";
+
+    string RegisterText =
+        lang == "uk" ? "Реєстрація" :
+        lang == "en" ? "Register" :
+        "Регистрация";
+
+    string LogoutText =
+        lang == "uk" ? "Вийти" :
+        lang == "en" ? "Logout" :
+        "Выйти";
+
+    string CurrentLanguage =
+        lang == "uk" ? "UK" :
+        lang == "en" ? "EN" :
+        "RU";
+}
+
+<!DOCTYPE html>
+<html lang="@lang">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - EURASIA BUS
+    </title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <!-- Site CSS -->
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <style>
+
+            body {
+                background: #f5f6f8;
+                min-height: 100vh;
+            }
+
+            .navbar-eurasia {
+                background: #0878f9;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+            }
+
+                .navbar-eurasia .navbar-brand {
+                    color: white !important;
+                    font-weight: 700;
+                    letter-spacing: .3px;
+                    font-size: 15px;
+                }
+
+                .navbar-eurasia .nav-link {
+                    color: rgba(255,255,255,.88) !important;
+                    font-size: 14px;
+                    padding-left: 10px !important;
+                    padding-right: 10px !important;
+                    white-space: nowrap;
+                }
+
+                    .navbar-eurasia .nav-link:hover {
+                        color: white !important;
+                    }
+
+            .bus-logo {
+                font-size: 19px;
+                margin-right: 7px;
+            }
+
+            .navbar-eurasia .dropdown-menu {
+                border: none;
+                box-shadow: 0 5px 18px rgba(0,0,0,.15);
+                border-radius: 7px;
+                min-width: 180px;
+            }
+
+            .navbar-eurasia .dropdown-item {
+                font-size: 14px;
+                padding: 8px 14px;
+            }
+
+                .navbar-eurasia .dropdown-item:hover {
+                    background: #eef5ff;
+                }
+
+            .language-form {
+                margin: 0;
+                padding: 0;
+            }
+
+            .language-button {
+                width: 100%;
+                border: 0;
+                background: transparent;
+                text-align: left;
+            }
+
+            main {
+                min-height: calc(100vh - 115px);
+            }
+
+            footer {
+                color: #777;
+                font-size: 13px;
+            }
+
+            @@media (max-width: 991px) {
+
+                .navbar-eurasia .nav-link {
+                    padding-top: 8px !important;
+                    padding-bottom: 8px !important;
+                }
+
+                .navbar-eurasia .navbar-nav {
+                    margin-top: 5px;
+                }
+            }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+     NAVBAR
+     ========================================================= -->
+
+    <nav class="navbar navbar-expand-lg navbar-eurasia">
+
+        <div class="container">
+
+
+            <!-- LOGO -->
+
+            <a class="navbar-brand"
+               asp-controller="Home"
+               asp-action="Index">
+
+                <i class="bi bi-bus-front-fill bus-logo"></i>
+
+                EURASIA BUS
+
+            </a>
+
+
+            <!-- MOBILE MENU -->
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="Menu">
+
+                <span class="navbar-toggler-icon"
+                      style="filter: brightness(0) invert(1);">
+                </span>
+
+            </button>
+
+
+            <!-- MENU -->
+
+            <div class="collapse navbar-collapse"
+                 id="mainNavbar">
+
+
+                <!-- =================================================
+                 LEFT MENU
+                 ================================================= -->
+
+                <ul class="navbar-nav me-auto">
+
+
+                    <!-- HOME -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           asp-controller="Home"
+                           asp-action="Index">
+
+                            <i class="bi bi-house-door"></i>
+
+                            @HomeText
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- FAQ -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           asp-controller="FAQ"
+                           asp-action="Index">
+
+                            <i class="bi bi-question-circle"></i>
+
+                            @FaqText
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- AUTHENTICATED USER -->
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+
+                        <!-- NOTIFICATIONS -->
+
+                        <li class="nav-item">
+
+                            <a class="nav-link"
+                               asp-controller="Notifications"
+                               asp-action="Index">
+
+                                <i class="bi bi-bell"></i>
+
+                                @NotificationsText
+
+                            </a>
+
+                        </li>
+
+
+                        <!-- MY BOOKINGS -->
+
+                        <li class="nav-item">
+
+                            <a class="nav-link"
+                               asp-controller="Booking"
+                               asp-action="MyBookings">
+
+                                <i class="bi bi-ticket-perforated"></i>
+
+                                @MyBookingsText
+
+                            </a>
+
+                        </li>
+
+                    }
+
+
+                    <!-- ADMIN -->
+                    @if (User.IsInRole("Admin"))
+                    {
+
+                        <li class="nav-item">
+
+                            <a class="nav-link"
+                               asp-controller="Admin"
+                               asp-action="Dashboard">
+
+                                <i class="bi bi-speedometer2"></i>
+
+                                @AdminText
+
+                            </a>
+
+                        </li>
+
+                    }
+
+                </ul>
+
+
+                <!-- =================================================
+                 RIGHT MENU
+                 ================================================= -->
+
+                <ul class="navbar-nav ms-auto">
+
+
+                    <!-- =================================================
+                     LANGUAGE
+                     ================================================= -->
+
+                    <li class="nav-item dropdown">
+
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           id="languageDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+
+                            <i class="bi bi-translate"></i>
+
+                            @CurrentLanguage
+
+                        </a>
+
+
+                        <ul class="dropdown-menu dropdown-menu-end"
+                            aria-labelledby="languageDropdown">
+
+
+                            <!-- RUSSIAN -->
+
+                            <li>
+
+                                <form asp-controller="Language"
+                                      asp-action="SetLanguage"
+                                      method="post"
+                                      class="language-form">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="culture"
+                                           value="ru" />
+
+                                    <input type="hidden"
+                                           name="returnUrl"
+                                           value="@Context.Request.Path@Context.Request.QueryString" />
+
+                                    <button type="submit"
+                                            class="dropdown-item language-button">
+
+                                        🇷🇺 Русский
+
+                                    </button>
+
+                                </form>
+
+                            </li>
+
+
+                            <!-- UKRAINIAN -->
+
+                            <li>
+
+                                <form asp-controller="Language"
+                                      asp-action="SetLanguage"
+                                      method="post"
+                                      class="language-form">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="culture"
+                                           value="uk" />
+
+                                    <input type="hidden"
+                                           name="returnUrl"
+                                           value="@Context.Request.Path@Context.Request.QueryString" />
+
+                                    <button type="submit"
+                                            class="dropdown-item language-button">
+
+                                        🇺🇦 Українська
+
+                                    </button>
+
+                                </form>
+
+                            </li>
+
+
+                            <!-- ENGLISH -->
+
+                            <li>
+
+                                <form asp-controller="Language"
+                                      asp-action="SetLanguage"
+                                      method="post"
+                                      class="language-form">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="culture"
+                                           value="en" />
+
+                                    <input type="hidden"
+                                           name="returnUrl"
+                                           value="@Context.Request.Path@Context.Request.QueryString" />
+
+                                    <button type="submit"
+                                            class="dropdown-item language-button">
+
+                                        🇬🇧 English
+
+                                    </button>
+
+                                </form>
+
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+
+                    <!-- =================================================
+                     USER
+                     ================================================= -->
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+
+                        <li class="nav-item dropdown">
+
+
+                            <a class="nav-link dropdown-toggle"
+                               href="#"
+                               id="userDropdown"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
+
+                                <i class="bi bi-person-circle"></i>
+
+                                @(User.Identity.Name ?? "Account")
+
+                            </a>
+
+
+                            <ul class="dropdown-menu dropdown-menu-end"
+                                aria-labelledby="userDropdown">
+
+
+                                <!-- MY BOOKINGS -->
+
+                                <li>
+
+                                    <a class="dropdown-item"
+                                       asp-controller="Booking"
+                                       asp-action="MyBookings">
+
+                                        <i class="bi bi-ticket-perforated"></i>
+
+                                        @MyBookingsText
+
+                                    </a>
+
+                                </li>
+
+
+                                <!-- ADMIN -->
+                                @if (User.IsInRole("Admin"))
+                                {
+
+                                    <li>
+
+                                        <hr class="dropdown-divider" />
+
+                                    </li>
+
+                                    <li>
+
+                                        <a class="dropdown-item"
+                                           asp-controller="Admin"
+                                           asp-action="Dashboard">
+
+                                            <i class="bi bi-speedometer2"></i>
+
+                                            @AdminText
+
+                                        </a>
+
+                                    </li>
+
+                                }
+
+
+                                <!-- LOGOUT -->
+
+                                <li>
+
+                                    <hr class="dropdown-divider" />
+
+                                </li>
+
+                                <li>
+
+                                    <form asp-controller="Account"
+                                          asp-action="Logout"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="dropdown-item">
+
+                                            <i class="bi bi-box-arrow-right"></i>
+
+                                            @LogoutText
+
+                                        </button>
+
+                                    </form>
+
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+                    }
+                    else
+                    {
+
+                        <!-- LOGIN -->
+
+                        <li class="nav-item">
+
+                            <a class="nav-link"
+                               asp-controller="Account"
+                               asp-action="Login">
+
+                                <i class="bi bi-box-arrow-in-right"></i>
+
+                                @LoginText
+
+                            </a>
+
+                        </li>
+
+
+                        <!-- REGISTER -->
+
+                        <li class="nav-item">
+
+                            <a class="nav-link"
+                               asp-controller="Account"
+                               asp-action="Register">
+
+                                <i class="bi bi-person-plus"></i>
+
+                                @RegisterText
+
+                            </a>
+
+                        </li>
+
+                    }
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================================================
+     CONTENT
+     ========================================================= -->
+
+    <main class="container py-3">
+
+        @RenderBody()
+
+    </main>
+
+
+    <!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+    <footer class="border-top bg-white mt-4 py-3">
+
+        <div class="container text-center">
+
+            © @DateTime.Now.Year EURASIA BUS
+
+            &nbsp; | &nbsp;
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="text-decoration-none">
+
+                @HomeText
+
+            </a>
+
+            &nbsp; | &nbsp;
+
+            <a asp-controller="FAQ"
+               asp-action="Index"
+               class="text-decoration-none">
+
+                @FaqText
+
+            </a>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true">
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+</body>
+</html>

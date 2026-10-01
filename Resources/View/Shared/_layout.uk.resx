@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="Home" xml:space="preserve">
+    <value>Головна</value>
+  </data>
+
+  <data name="FAQ" xml:space="preserve">
+    <value>Часті запитання</value>
+  </data>
+
+  <data name="MyBookings" xml:space="preserve">
+    <value>Мої бронювання</value>
+  </data>
+
+  <data name="Administration" xml:space="preserve">
+    <value>Адміністрування</value>
+  </data>
+
+  <data name="Login" xml:space="preserve">
+    <value>Увійти</value>
+  </data>
+
+  <data name="Register" xml:space="preserve">
+    <value>Реєстрація</value>
+  </data>
+
+  <data name="Logout" xml:space="preserve">
+    <value>Вийти</value>
+  </data>
+
+  <data name="Account" xml:space="preserve">
+    <value>Обліковий запис</value>
+  </data>
+
+  <data name="Language" xml:space="preserve">
+    <value>Мова</value>
+  </data>
+
+  <data name="Russian" xml:space="preserve">
+    <value>Русский</value>
+  </data>
+
+  <data name="Ukrainian" xml:space="preserve">
+    <value>Українська</value>
+  </data>
+
+  <data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
+
+  <data name="EurasiaBusDescription" xml:space="preserve">
+    <value>Автобусні перевезення Європою</value>
+  </data>
+
+  <data name="AllRightsReserved" xml:space="preserve">
+    <value>Всі права захищені</value>
+  </data>
+</root>

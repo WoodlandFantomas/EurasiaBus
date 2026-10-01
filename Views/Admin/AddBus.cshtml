@@ -1,0 +1,230 @@
+﻿
+@using EurasiaBus.Models
+@model Bus
+
+@{
+    ViewData["Title"] = "Добавить автобус";
+}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8 col-xl-7">
+
+            <!-- Заголовок -->
+            <div class="text-center mb-4">
+
+                <div class="display-5 text-primary mb-2">
+                    <i class="bi bi-bus-front-fill"></i>
+                </div>
+
+                <h1 class="fw-bold text-primary">
+                    Добавить автобус
+                </h1>
+
+                <p class="text-muted mb-0">
+                    Добавление нового автобуса в EURASIA BUS
+                </p>
+
+            </div>
+
+
+            <!-- Форма -->
+            <div class="card border-0 shadow-lg">
+
+                <div class="card-header bg-primary text-white py-3">
+
+                    <h5 class="mb-0">
+                        <i class="bi bi-bus-front-fill me-2"></i>
+                        Информация об автобусе
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <form asp-controller="Admin"
+                          asp-action="AddBus"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="alert alert-danger"
+                             role="alert">
+                        </div>
+
+
+                        <!-- Название -->
+                        <div class="mb-4">
+
+                            <label asp-for="Name"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-bus-front text-primary me-1"></i>
+                                Название автобуса
+
+                            </label>
+
+                            <input asp-for="Name"
+                                   class="form-control form-control-lg"
+                                   placeholder="Например: EURASIA Express 01" />
+
+                            <span asp-validation-for="Name"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <!-- Регистрационный номер -->
+                        <div class="mb-4">
+
+                            <label asp-for="RegistrationNumber"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-card-text text-primary me-1"></i>
+                                Регистрационный номер
+
+                            </label>
+
+                            <input asp-for="RegistrationNumber"
+                                   class="form-control form-control-lg"
+                                   placeholder="Например: AA 1234 BC" />
+
+                            <span asp-validation-for="RegistrationNumber"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <!-- Модель -->
+                            <div class="col-md-6">
+
+                                <label asp-for="Model"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-truck text-primary me-1"></i>
+                                    Модель
+
+                                </label>
+
+                                <input asp-for="Model"
+                                       class="form-control"
+                                       placeholder="Например: Setra S 516 HD" />
+
+                                <span asp-validation-for="Model"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+
+                            <!-- Количество мест -->
+                            <div class="col-md-6">
+
+                                <label asp-for="SeatCount"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-grid-3x3-gap text-primary me-1"></i>
+                                    Количество мест
+
+                                </label>
+
+                                <input asp-for="SeatCount"
+                                       type="number"
+                                       min="1"
+                                       max="100"
+                                       class="form-control"
+                                       placeholder="Например: 50" />
+
+                                <span asp-validation-for="SeatCount"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Перевозчик -->
+                        <div class="mt-4 mb-4">
+
+                            <label asp-for="Carrier"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-building text-primary me-1"></i>
+                                Перевозчик
+
+                            </label>
+
+                            <input asp-for="Carrier"
+                                   class="form-control form-control-lg"
+                                   placeholder="Например: EURASIA BUS" />
+
+                            <span asp-validation-for="Carrier"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <!-- Кнопки -->
+                        <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg">
+
+                                <i class="bi bi-check-circle me-1"></i>
+                                Добавить автобус
+
+                            </button>
+
+
+                            <a asp-controller="Admin"
+                               asp-action="Buses"
+                               class="btn btn-outline-secondary btn-lg">
+
+                                <i class="bi bi-arrow-left me-1"></i>
+                                Отмена
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <!-- Информационная карточка -->
+            <div class="alert alert-info border-0 shadow-sm mt-4">
+
+                <i class="bi bi-info-circle-fill me-2"></i>
+
+                После добавления автобус появится в разделе
+                <strong>«Автобусы»</strong> и его можно будет использовать
+                для создания рейсов.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}
+

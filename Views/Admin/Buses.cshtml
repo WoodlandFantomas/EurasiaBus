@@ -1,0 +1,525 @@
+﻿
+@using EurasiaBus.Models
+@model IEnumerable<Bus>
+
+@{
+    ViewData["Title"] = "Автобусы";
+
+    var buses = Model?.ToList() ?? new List<Bus>();
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Заголовок -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+        <div>
+            <h1 class="fw-bold text-primary mb-1">
+                <i class="bi bi-bus-front-fill me-2"></i>
+                Автобусы
+            </h1>
+
+            <p class="text-muted mb-0">
+                Управление автобусами EURASIA BUS
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <!-- Добавить автобус -->
+            <a asp-controller="Admin"
+               asp-action="AddBus"
+               class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>
+                Добавить автобус
+            </a>
+
+            <!-- Панель администратора -->
+            <a asp-controller="Admin"
+               asp-action="Dashboard"
+               class="btn btn-outline-primary">
+                <i class="bi bi-speedometer2 me-1"></i>
+                Панель администратора
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Статистика -->
+    <div class="row g-4 mb-4">
+
+        <!-- Всего -->
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Всего автобусов
+                            </div>
+
+                            <div class="fs-2 fw-bold text-primary">
+                                @buses.Count
+                            </div>
+
+                        </div>
+
+                        <div class="fs-1 text-primary">
+                            <i class="bi bi-bus-front-fill"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Активные -->
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Активные автобусы
+                            </div>
+
+                            <div class="fs-2 fw-bold text-success">
+                                @buses.Count(x => x.IsActive)
+                            </div>
+
+                        </div>
+
+                        <div class="fs-1 text-success">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Рейсы -->
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Рейсов
+                            </div>
+
+                            <div class="fs-2 fw-bold text-info">
+                                @buses.Sum(x => x.Trips?.Count ?? 0)
+                            </div>
+
+                        </div>
+
+                        <div class="fs-1 text-info">
+                            <i class="bi bi-signpost-2-fill"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Поиск -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <div class="row g-3 align-items-center">
+
+                <!-- Поиск -->
+                <div class="col-lg-8">
+
+                    <div class="input-group">
+
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="bi bi-search"></i>
+                        </span>
+
+                        <input type="text"
+                               id="busSearch"
+                               class="form-control"
+                               placeholder="Поиск по названию, номеру, модели или перевозчику..." />
+
+                    </div>
+
+                </div>
+
+
+                <!-- Фильтр -->
+                <div class="col-lg-4">
+
+                    <select id="statusFilter"
+                            class="form-select">
+
+                        <option value="all">
+                            Все автобусы
+                        </option>
+
+                        <option value="active">
+                            Только активные
+                        </option>
+
+                        <option value="inactive">
+                            Только неактивные
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Таблица -->
+    <div class="card border-0 shadow-sm">
+
+        <!-- Заголовок таблицы -->
+        <div class="card-header bg-primary text-white py-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <span class="fw-semibold">
+                    <i class="bi bi-list-ul me-2"></i>
+                    Список автобусов
+                </span>
+
+                <span class="badge bg-light text-primary">
+                    @buses.Count
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0"
+                   id="busesTable">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>
+                            Автобус
+                        </th>
+
+                        <th>
+                            Регистрационный номер
+                        </th>
+
+                        <th>
+                            Модель
+                        </th>
+
+                        <th>
+                            Перевозчик
+                        </th>
+
+                        <th>
+                            Мест
+                        </th>
+
+                        <th>
+                            Рейсов
+                        </th>
+
+                        <th>
+                            Статус
+                        </th>
+
+                        <th class="text-center">
+                            Действия
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @if (!buses.Any())
+                    {
+                        <tr id="emptyRow">
+
+                            <td colspan="9"
+                                class="text-center py-5">
+
+                                <div class="text-muted">
+
+                                    <i class="bi bi-bus-front fs-1 d-block mb-3"></i>
+
+                                    <div class="fw-semibold">
+                                        Автобусы отсутствуют
+                                    </div>
+
+                                    <div class="small">
+                                        В базе данных пока нет автобусов.
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var bus in buses)
+                        {
+                            var searchText =
+                                $"{bus.Name} " +
+                                $"{bus.RegistrationNumber} " +
+                                $"{bus.Model} " +
+                                $"{bus.Carrier}".ToLowerInvariant();
+
+                            <tr class="bus-row"
+                                data-search="@searchText"
+                                data-status="@(bus.IsActive ? "active" : "inactive")">
+
+                                <!-- ID -->
+                                <td>
+
+                                    <span class="badge bg-secondary">
+                                        @bus.BusId
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Автобус -->
+                                <td>
+
+                                    <div class="fw-semibold">
+
+                                        <i class="bi bi-bus-front-fill text-primary me-1"></i>
+
+                                        @bus.Name
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Регистрационный номер -->
+                                <td>
+
+                                    <span class="fw-semibold">
+                                        @bus.RegistrationNumber
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Модель -->
+                                <td>
+                                    @bus.Model
+                                </td>
+
+
+                                <!-- Перевозчик -->
+                                <td>
+                                    @bus.Carrier
+                                </td>
+
+
+                                <!-- Места -->
+                                <td>
+
+                                    <span class="badge bg-info text-dark">
+                                        @bus.SeatCount
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Рейсы -->
+                                <td>
+
+                                    <span class="badge bg-primary">
+                                        @(bus.Trips?.Count ?? 0)
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Статус -->
+                                <td>
+
+                                    @if (bus.IsActive)
+                                    {
+                                        <span class="badge bg-success">
+
+                                            <i class="bi bi-check-circle me-1"></i>
+
+                                            Активен
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+
+                                            <i class="bi bi-x-circle me-1"></i>
+
+                                            Неактивен
+
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Действия -->
+                                <td class="text-center">
+
+                                    <form asp-controller="Admin"
+                                          asp-action="DeleteBus"
+                                          asp-route-id="@bus.BusId"
+                                          method="post"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Вы действительно хотите удалить этот автобус?');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger">
+
+                                            <i class="bi bi-trash3 me-1"></i>
+
+                                            Удалить
+
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const searchInput =
+                document.getElementById("busSearch");
+
+            const statusFilter =
+                document.getElementById("statusFilter");
+
+            const rows =
+                document.querySelectorAll(".bus-row");
+
+
+            function filterBuses() {
+
+                const search =
+                    searchInput.value
+                        .toLowerCase()
+                        .trim();
+
+                const status =
+                    statusFilter.value;
+
+
+                rows.forEach(function (row) {
+
+                    const text =
+                        row.dataset.search || "";
+
+                    const rowStatus =
+                        row.dataset.status || "";
+
+
+                    const matchesSearch =
+                        text.includes(search);
+
+
+                    const matchesStatus =
+                        status === "all" ||
+                        rowStatus === status;
+
+
+                    row.classList.toggle(
+                        "d-none",
+                        !(matchesSearch && matchesStatus)
+                    );
+
+                });
+
+            }
+
+
+            searchInput.addEventListener(
+                "input",
+                filterBuses
+            );
+
+
+            statusFilter.addEventListener(
+                "change",
+                filterBuses
+            );
+
+        });
+    </script>
+
+}
+

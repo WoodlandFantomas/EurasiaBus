@@ -1,0 +1,370 @@
+﻿@model IEnumerable<EurasiaBus.Models.Payment>
+
+@{
+    ViewData["Title"] = "Платежи";
+
+
+var payments = Model?.ToList()
+    ?? new List<EurasiaBus.Models.Payment>();
+
+    var paidPayments = payments
+        .Where(x => string.Equals(
+            x.Status,
+            "Paid",
+            StringComparison.OrdinalIgnoreCase))
+        .ToList();
+
+    var totalPaid = paidPayments.Sum(x => x.Amount);
+
+
+}
+
+<div class="container-fluid py-4">
+
+    ```
+    <!-- Заголовок -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-credit-card-fill me-2"></i>
+                Платежи
+            </h2>
+
+            <div class="text-muted">
+                История платежей пользователей
+            </div>
+        </div>
+
+        <a asp-controller="Admin"
+           asp-action="Dashboard"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Панель администратора
+        </a>
+
+    </div>
+
+
+    <!-- Статистика -->
+    <div class="row g-3 mb-4">
+
+        <!-- Всего -->
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <div class="text-muted small">
+                                Всего платежей
+                            </div>
+
+                            <div class="fs-3 fw-bold">
+                                @payments.Count
+                            </div>
+                        </div>
+
+                        <div class="fs-2 text-primary">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Оплачено -->
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <div class="text-muted small">
+                                Оплачено
+                            </div>
+
+                            <div class="fs-3 fw-bold text-success">
+                                @paidPayments.Count
+                            </div>
+                        </div>
+
+                        <div class="fs-2 text-success">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Сумма -->
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <div class="text-muted small">
+                                Сумма оплаченных
+                            </div>
+
+                            <div class="fs-3 fw-bold text-success">
+                                @totalPaid.ToString("N2")
+                            </div>
+                        </div>
+
+                        <div class="fs-2 text-success">
+                            <i class="bi bi-cash-stack"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- История платежей -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-dark text-white">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <span class="fw-semibold">
+                    <i class="bi bi-list-ul me-2"></i>
+                    История платежей
+                </span>
+
+                <span class="badge bg-light text-dark">
+                    @payments.Count
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            @if (payments.Count > 0)
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-striped table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th style="width:70px;">
+                                    ID
+                                </th>
+
+                                <th>
+                                    Бронирование
+                                </th>
+
+                                <th>
+                                    Сумма
+                                </th>
+
+                                <th>
+                                    Способ оплаты
+                                </th>
+
+                                <th>
+                                    Статус
+                                </th>
+
+                                <th>
+                                    Transaction ID
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach (var payment in payments)
+                            {
+                                <tr>
+
+                                    <!-- ID -->
+                                    <td class="fw-semibold">
+                                        @payment.PaymentId
+                                    </td>
+
+
+                                    <!-- Бронирование -->
+                                    <td>
+
+                                        @if (payment.Booking != null)
+                                        {
+                                            <div class="fw-semibold">
+                                                Бронирование №
+                                                @payment.Booking.BookingId
+                                            </div>
+
+                                            @if (!string.IsNullOrWhiteSpace(
+                                                payment.Booking.PnrCode))
+                                            {
+                                                <small class="text-muted">
+                                                    PNR:
+                                                    @payment.Booking.PnrCode
+                                                </small>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- Сумма -->
+                                    <td class="fw-semibold">
+                                        @payment.Amount.ToString("N2")
+                                    </td>
+
+
+                                    <!-- Способ оплаты -->
+                                    <td>
+
+                                        @if (!string.IsNullOrWhiteSpace(
+                                            payment.PaymentMethod))
+                                        {
+                                            @payment.PaymentMethod
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- Статус -->
+                                    <td>
+
+                                        @if (string.Equals(
+                                            payment.Status,
+                                            "Paid",
+                                            StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Оплачен
+                                            </span>
+                                        }
+                                        else if (string.Equals(
+                                            payment.Status,
+                                            "Pending",
+                                            StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                Ожидает
+                                            </span>
+                                        }
+                                        else if (string.Equals(
+                                            payment.Status,
+                                            "Failed",
+                                            StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-danger">
+                                                Ошибка
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @payment.Status
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- Transaction ID -->
+                                    <td>
+
+                                        @if (!string.IsNullOrWhiteSpace(
+                                            payment.TransactionId))
+                                        {
+                                            <small class="font-monospace">
+                                                @payment.TransactionId
+                                            </small>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+
+                    <div class="display-5 text-muted mb-3">
+                        <i class="bi bi-credit-card"></i>
+                    </div>
+
+                    <h5>
+                        Платежей пока нет
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        В системе ещё не зарегистрировано ни одного платежа.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+</div>

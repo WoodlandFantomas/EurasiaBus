@@ -1,0 +1,195 @@
+﻿@model IEnumerable<EurasiaBus.Models.Route>
+
+@{
+    ViewData["Title"] = "Маршруты TXT";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>🚌 Маршруты TXT</h2>
+            <div class="text-muted">
+                Маршруты из файла Routes.txt
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a asp-controller="Admin"
+               asp-action="DownloadRoutesText"
+               class="btn btn-success">
+                ⬇️ Скачать Routes.txt
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Dashboard"
+               class="btn btn-secondary">
+                ← Назад
+            </a>
+
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <!-- Загрузка -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+            <strong>Загрузить маршруты</strong>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-controller="Admin"
+                  asp-action="UploadRoutesText"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                @Html.AntiForgeryToken()
+
+                <div class="row align-items-end">
+
+                    <div class="col-md-8">
+
+                        <label class="form-label">
+                            TXT-файл
+                        </label>
+
+                        <input type="file"
+                               name="file"
+                               class="form-control"
+                               accept=".txt"
+                               required />
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            ⬆️ Загрузить маршруты
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Формат -->
+
+    <div class="alert alert-info">
+
+        <strong>Формат файла:</strong>
+
+        <code>
+            Откуда|Маршрут|Цена|Куда
+        </code>
+
+        <br />
+
+        Например:
+
+        <code>
+            Киев|Киев → Варшава → Берлин|105.00|Берлин
+        </code>
+
+    </div>
+
+    <!-- Просмотр -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header d-flex justify-content-between">
+
+            <strong>
+                Список маршрутов
+            </strong>
+
+            <span class="badge bg-primary">
+                @Model.Count()
+            </span>
+
+        </div>
+
+        <div class="card-body p-0">
+
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-striped table-hover mb-0">
+
+                        <thead class="table-dark">
+
+                            <tr>
+                                <th>Откуда</th>
+                                <th>Маршрут</th>
+                                <th>Цена</th>
+                                <th>Куда</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var route in Model)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @route.From
+                                    </td>
+
+                                    <td>
+                                        @route.RoutePath
+                                    </td>
+
+                                    <td>
+                                        @route.Price.ToString("N2")
+                                    </td>
+
+                                    <td>
+                                        @route.To
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="p-4 text-center text-muted">
+                    Маршруты не найдены.
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

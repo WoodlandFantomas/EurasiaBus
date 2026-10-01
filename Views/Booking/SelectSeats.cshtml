@@ -1,0 +1,1299 @@
+@model EurasiaBus.Models.BusTrip
+
+@{
+    ViewData["Title"] = "Выбор мест";
+
+
+int passengers = ViewBag.Passengers is int p && p > 0 ? p : 1;
+
+    var seats = Model.Seats
+        .OrderBy(x =>
+        {
+            int number;
+            return int.TryParse(x.SeatNumber, out number)
+                ? number
+                : int.MaxValue;
+        })
+        .ToList();
+
+    var rows = new List<List<EurasiaBus.Models.BusTripSeat>>();
+
+    for (int i = 0; i < seats.Count; i += 4)
+    {
+        rows.Add(seats.Skip(i).Take(4).ToList());
+    }
+
+
+}
+
+<div class="container py-4">
+
+    ```
+    <div class="text-center mb-4">
+
+        <div class="bus-title-icon mb-3">
+            <i class="bi bi-bus-front-fill"></i>
+        </div>
+
+        <h2 class="fw-bold mb-2">
+            Выберите места
+        </h2>
+
+        <div class="route-info">
+            <span class="fw-semibold">
+                @Model.DepartureStop.City
+            </span>
+
+            <i class="bi bi-arrow-right mx-2"></i>
+
+            <span class="fw-semibold">
+                @Model.ArrivalStop.City
+            </span>
+        </div>
+
+        <div class="mt-3">
+            <span class="price-badge">
+                € @Model.Price.ToString("N2")
+                <span class="price-label">за место</span>
+            </span>
+        </div>
+
+    </div>
+
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger shadow-sm rounded-3 mb-4">
+
+            <div class="d-flex align-items-center">
+
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                <div>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+    <!-- ВАЖНО: вся схема находится внутри формы -->
+
+    <form asp-action="PassengerDetails"
+          asp-controller="Booking"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="TripId"
+               value="@Model.BusTripId" />
+
+
+        <div class="row g-4 justify-content-center">
+
+
+            <!-- =========================
+             АВТОБУС
+             ========================= -->
+
+            <div class="col-lg-7 col-xl-6">
+
+                <div class="bus-wrapper">
+
+
+                    <!-- Передняя часть -->
+
+                    <div class="bus-front">
+
+                        <div class="driver-zone">
+
+                            <div class="driver-icon">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+
+                            <span>Водитель</span>
+
+                        </div>
+
+
+                        <div class="front-windshield">
+
+                            <div class="windshield-glass"></div>
+
+                        </div>
+
+
+                        <div class="door-zone">
+
+                            <i class="bi bi-door-open-fill"></i>
+
+                            <span>
+                                Вход
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Салон -->
+
+                    <div class="bus-cabin">
+
+                        <div class="cabin-header">
+                            Салон автобуса
+                        </div>
+
+
+                        @for (int rowIndex = 0; rowIndex < rows.Count; rowIndex++)
+                        {
+                            var row = rows[rowIndex];
+
+                            <div class="seat-row">
+
+
+                                <!-- Левая сторона -->
+
+                                <div class="seat-pair">
+
+                                    @for (int seatIndex = 0; seatIndex < 2; seatIndex++)
+                                    {
+                                        if (seatIndex < row.Count)
+                                        {
+                                            var seat = row[seatIndex];
+
+                                            <label class="seat @(seat.IsAvailable ? "seat-available" : "seat-occupied")">
+
+                                                <input type="checkbox"
+                                                       name="SelectedSeatIds"
+                                                       value="@seat.BusTripSeatId"
+                                                       class="seat-checkbox"
+                                                @(seat.IsAvailable ? null : "disabled") />
+
+                                                <span class="seat-shape">
+
+                                                    <span class="seat-head"></span>
+
+                                                    <span class="seat-body">
+
+                                                        <span class="seat-number">
+                                                            @seat.SeatNumber
+                                                        </span>
+
+                                                    </span>
+
+                                                </span>
+
+                                            </label>
+                                        }
+                                    }
+
+                                </div>
+
+
+                                <!-- Проход -->
+
+                                <div class="aisle"></div>
+
+
+                                <!-- Правая сторона -->
+
+                                <div class="seat-pair">
+
+                                    @for (int seatIndex = 2; seatIndex < 4; seatIndex++)
+                                    {
+                                        if (seatIndex < row.Count)
+                                        {
+                                            var seat = row[seatIndex];
+
+                                            <label class="seat @(seat.IsAvailable ? "seat-available" : "seat-occupied")">
+
+                                                <input type="checkbox"
+                                                       name="SelectedSeatIds"
+                                                       value="@seat.BusTripSeatId"
+                                                       class="seat-checkbox"
+                                                @(seat.IsAvailable ? null : "disabled") />
+
+                                                <span class="seat-shape">
+
+                                                    <span class="seat-head"></span>
+
+                                                    <span class="seat-body">
+
+                                                        <span class="seat-number">
+                                                            @seat.SeatNumber
+                                                        </span>
+
+                                                    </span>
+
+                                                </span>
+
+                                            </label>
+                                        }
+                                    }
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+
+                    <!-- Задняя часть -->
+
+                    <div class="bus-back">
+
+                        <div class="back-door">
+
+                            <i class="bi bi-door-open-fill"></i>
+
+                            <span>
+                                Выход
+                            </span>
+
+                        </div>
+
+
+                        <div class="rear-area">
+
+                            <i class="bi bi-box-seam"></i>
+
+                            <span>
+                                Задняя часть
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+             ПРАВАЯ ПАНЕЛЬ
+             ========================= -->
+
+            <div class="col-lg-4 col-xl-3">
+
+                <div class="selection-card">
+
+                    <div class="selection-card-header">
+
+                        <div class="selection-icon">
+                            <i class="bi bi-ticket-perforated-fill"></i>
+                        </div>
+
+                        <div>
+
+                            <div class="selection-title">
+                                Ваш билет
+                            </div>
+
+                            <div class="selection-subtitle">
+                                Выбор мест
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Маршрут -->
+
+                    <div class="route-card">
+
+                        <div class="route-city">
+                            @Model.DepartureStop.City
+                        </div>
+
+                        <div class="route-arrow">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+
+                        <div class="route-city">
+                            @Model.ArrivalStop.City
+                        </div>
+
+                    </div>
+
+
+                    <!-- Пассажиры -->
+
+                    <div class="passenger-counter">
+
+                        <div class="counter-label">
+                            <i class="bi bi-people-fill me-2"></i>
+                            Пассажиров
+                        </div>
+
+                        <div class="counter-number">
+                            @passengers
+                        </div>
+
+                    </div>
+
+
+                    <!-- Инструкция -->
+
+                    <div class="instruction">
+
+                        <i class="bi bi-info-circle-fill"></i>
+
+                        <div>
+
+                            Выберите
+
+                            <strong>
+                                @passengers
+                                @(passengers == 1 ? "место" :
+                                  passengers >= 2 && passengers <= 4 ? "места" : "мест")
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Легенда -->
+
+                    <div class="legend">
+
+                        <div class="legend-title">
+                            Обозначения
+                        </div>
+
+                        <div class="legend-row">
+                            <span class="legend-seat legend-free"></span>
+                            <span>Свободно</span>
+                        </div>
+
+                        <div class="legend-row">
+                            <span class="legend-seat legend-selected"></span>
+                            <span>Выбрано</span>
+                        </div>
+
+                        <div class="legend-row">
+                            <span class="legend-seat legend-busy"></span>
+                            <span>Занято</span>
+                        </div>
+
+                    </div>
+
+
+                    <hr />
+
+
+                    <!-- Выбранные места -->
+
+                    <div class="selected-section">
+
+                        <div class="selected-label">
+                            Выбранные места
+                        </div>
+
+                        <div id="selectedSeats"
+                             class="selected-seats">
+
+                            Пока не выбрано
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Прогресс -->
+
+                    <div class="selection-progress">
+
+                        <div class="progress-info">
+
+                            <span>
+                                Выбрано
+                            </span>
+
+                            <strong>
+
+                                <span id="selectedCount">0</span>
+                                /
+                                @passengers
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="progress">
+
+                            <div id="seatProgress"
+                                 class="progress-bar"
+                                 role="progressbar"
+                                 style="width: 0%;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Цена -->
+
+                    <div class="total-price">
+
+                        <span>
+                            Итого
+                        </span>
+
+                        <strong id="totalPrice">
+                            € 0.00
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Кнопка -->
+
+                    <button type="submit"
+                            id="continueButton"
+                            class="continue-button"
+                            disabled>
+
+                        <span>
+                            Продолжить
+                        </span>
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+    ```
+
+</div>
+
+<style>
+
+    .bus-title-icon {
+        width: 64px;
+        height: 64px;
+        margin: auto;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e7f1ff;
+        color: #0d6efd;
+        font-size: 30px;
+    }
+
+    .route-info {
+        color: #6c757d;
+        font-size: 1.05rem;
+    }
+
+    .price-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 30px;
+        background: #e7f1ff;
+        color: #0d6efd;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .price-label {
+        font-size: .78rem;
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+
+    /* BUS */
+
+    .bus-wrapper {
+        max-width: 590px;
+        margin: auto;
+        padding: 12px;
+        background: #eef1f5;
+        border: 1px solid #dce1e7;
+        border-radius: 48px 48px 28px 28px;
+        box-shadow: 0 20px 45px rgba(0,0,0,.10), inset 0 0 0 4px rgba(255,255,255,.6);
+    }
+
+
+    /* FRONT */
+
+    .bus-front {
+        position: relative;
+        min-height: 105px;
+        display: grid;
+        grid-template-columns: 90px 1fr 90px;
+        align-items: center;
+        padding: 15px 18px;
+        background: #dfe4ea;
+        border-radius: 38px 38px 14px 14px;
+        overflow: hidden;
+    }
+
+    .driver-zone,
+    .door-zone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #68717c;
+        font-size: .72rem;
+        font-weight: 600;
+        position: relative;
+        z-index: 2;
+    }
+
+    .driver-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        color: #6c757d;
+        font-size: 22px;
+        margin-bottom: 4px;
+        box-shadow: 0 3px 8px rgba(0,0,0,.08);
+    }
+
+    .door-zone i {
+        font-size: 25px;
+        margin-bottom: 5px;
+    }
+
+    .front-windshield {
+        height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .windshield-glass {
+        width: 90%;
+        height: 48px;
+        background: linear-gradient(135deg,#c7e2f7,#eef8ff);
+        border: 2px solid #b6cddd;
+        border-radius: 12px 12px 25px 25px;
+    }
+
+
+    /* CABIN */
+
+    .bus-cabin {
+        margin: 8px 0;
+        padding: 10px 12px 15px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: inset 0 0 0 1px #edf0f3;
+    }
+
+    .cabin-header {
+        text-align: center;
+        padding: 5px 0 10px;
+        color: #adb5bd;
+        font-size: .72rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+
+    /* SEAT ROW */
+
+    .seat-row {
+        display: grid;
+        grid-template-columns: minmax(0,1fr) 46px minmax(0,1fr);
+        align-items: center;
+        min-height: 68px;
+    }
+
+    .seat-pair {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .aisle {
+        height: 100%;
+        min-height: 55px;
+        position: relative;
+    }
+
+        .aisle::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 8px;
+            bottom: 8px;
+            border-left: 2px dashed #dfe3e7;
+        }
+
+
+    /* SEATS */
+
+    .seat {
+        position: relative;
+        display: block;
+        width: 55px;
+        height: 57px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .seat-checkbox {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .seat-shape {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        transition: transform .18s ease;
+    }
+
+    .seat-head {
+        position: absolute;
+        top: 1px;
+        left: 7px;
+        right: 7px;
+        height: 24px;
+        border-radius: 10px 10px 5px 5px;
+        background: #e7f1ff;
+        border: 2px solid #0d6efd;
+        transition: all .18s ease;
+    }
+
+    .seat-body {
+        position: absolute;
+        left: 4px;
+        right: 4px;
+        bottom: 1px;
+        height: 32px;
+        border-radius: 7px;
+        background: #d7e8ff;
+        border: 2px solid #0d6efd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all .18s ease;
+    }
+
+    .seat-number {
+        position: relative;
+        z-index: 2;
+        font-size: .78rem;
+        font-weight: 800;
+        color: #0d6efd;
+    }
+
+    .seat-available:hover .seat-shape {
+        transform: translateY(-3px);
+    }
+
+    .seat-checkbox:checked + .seat-shape {
+        transform: translateY(-3px);
+    }
+
+        .seat-checkbox:checked + .seat-shape .seat-head,
+        .seat-checkbox:checked + .seat-shape .seat-body {
+            background: #0d6efd;
+            border-color: #0a58ca;
+            box-shadow: 0 7px 15px rgba(13,110,253,.35);
+        }
+
+        .seat-checkbox:checked + .seat-shape .seat-number {
+            color: #fff;
+        }
+
+
+    /* OCCUPIED */
+
+    .seat-occupied {
+        cursor: not-allowed;
+    }
+
+        .seat-occupied .seat-head,
+        .seat-occupied .seat-body {
+            background: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .seat-occupied .seat-number {
+            color: #adb5bd;
+        }
+
+        .seat-occupied .seat-body::after {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 2px;
+            background: #adb5bd;
+            transform: rotate(-45deg);
+        }
+
+
+    /* BACK */
+
+    .bus-back {
+        min-height: 78px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        background: #dfe4ea;
+        border-radius: 12px 12px 28px 28px;
+        color: #6c757d;
+        font-size: .75rem;
+        font-weight: 600;
+    }
+
+    .back-door,
+    .rear-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+        .back-door i,
+        .rear-area i {
+            font-size: 22px;
+        }
+
+
+    /* CARD */
+
+    .selection-card {
+        background: #fff;
+        border: 1px solid #e8ebef;
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 15px 40px rgba(0,0,0,.08);
+    }
+
+    .selection-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .selection-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e7f1ff;
+        color: #0d6efd;
+        font-size: 20px;
+    }
+
+    .selection-title {
+        font-weight: 700;
+        font-size: 1.05rem;
+    }
+
+    .selection-subtitle {
+        color: #8a929b;
+        font-size: .78rem;
+    }
+
+
+    /* ROUTE */
+
+    .route-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px;
+        background: #f7f9fb;
+        border-radius: 13px;
+        margin-bottom: 15px;
+    }
+
+    .route-city {
+        font-size: .85rem;
+        font-weight: 700;
+    }
+
+    .route-arrow {
+        color: #0d6efd;
+    }
+
+
+    /* PASSENGERS */
+
+    .passenger-counter {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 13px 14px;
+        background: #f7f9fb;
+        border-radius: 13px;
+        margin-bottom: 13px;
+    }
+
+    .counter-label {
+        font-size: .86rem;
+        color: #6c757d;
+    }
+
+    .counter-number {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background: #0d6efd;
+        color: white;
+        font-weight: 700;
+    }
+
+
+    /* INFO */
+
+    .instruction {
+        display: flex;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 12px;
+        background: #eef6ff;
+        color: #2769aa;
+        font-size: .82rem;
+        margin-bottom: 20px;
+    }
+
+        .instruction i {
+            color: #0d6efd;
+            margin-top: 2px;
+        }
+
+
+    /* LEGEND */
+
+    .legend-title {
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: #8a929b;
+        margin-bottom: 10px;
+    }
+
+    .legend-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: .8rem;
+        color: #606870;
+        margin-bottom: 8px;
+    }
+
+    .legend-seat {
+        width: 25px;
+        height: 22px;
+        display: inline-block;
+        border-radius: 6px;
+        border: 2px solid;
+    }
+
+    .legend-free {
+        background: #e7f1ff;
+        border-color: #0d6efd;
+    }
+
+    .legend-selected {
+        background: #0d6efd;
+        border-color: #0a58ca;
+    }
+
+    .legend-busy {
+        background: #e9ecef;
+        border-color: #ced4da;
+    }
+
+
+    /* SELECTED */
+
+    .selected-label {
+        font-size: .78rem;
+        color: #8a929b;
+        margin-bottom: 5px;
+    }
+
+    .selected-seats {
+        min-height: 28px;
+        font-size: .95rem;
+        font-weight: 700;
+        color: #0d6efd;
+    }
+
+
+    /* PROGRESS */
+
+    .selection-progress {
+        margin-top: 18px;
+    }
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: .8rem;
+        color: #6c757d;
+        margin-bottom: 7px;
+    }
+
+    .progress {
+        height: 7px;
+        background: #edf0f3;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        background: #0d6efd;
+        border-radius: 20px;
+        transition: width .25s ease;
+    }
+
+
+    /* TOTAL */
+
+    .total-price {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 22px;
+        margin-bottom: 18px;
+        font-size: .9rem;
+        color: #6c757d;
+    }
+
+        .total-price strong {
+            font-size: 1.35rem;
+            color: #212529;
+        }
+
+
+    /* BUTTON */
+
+    .continue-button {
+        width: 100%;
+        border: 0;
+        border-radius: 13px;
+        padding: 13px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: #0d6efd;
+        color: white;
+        font-size: .95rem;
+        font-weight: 700;
+        transition: all .2s ease;
+    }
+
+        .continue-button:not(:disabled):hover {
+            background: #0b5ed7;
+            transform: translateY(-1px);
+            box-shadow: 0 7px 18px rgba(13,110,253,.25);
+        }
+
+        .continue-button:disabled {
+            background: #cfd5dc;
+            cursor: not-allowed;
+        }
+
+
+    /* MOBILE */
+
+    @@media (max-width: 991.98px) {
+
+        .selection-card {
+            max-width: 590px;
+            margin: auto;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+
+        .container {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .bus-wrapper {
+            padding: 8px;
+            border-radius: 32px 32px 20px 20px;
+        }
+
+        .bus-front {
+            grid-template-columns: 65px 1fr 65px;
+            min-height: 85px;
+            padding: 10px;
+        }
+
+        .seat-row {
+            grid-template-columns: minmax(0,1fr) 28px minmax(0,1fr);
+            min-height: 61px;
+        }
+
+        .seat {
+            width: 46px;
+            height: 49px;
+        }
+
+        .seat-head {
+            left: 6px;
+            right: 6px;
+            height: 21px;
+        }
+
+        .seat-body {
+            left: 3px;
+            right: 3px;
+            height: 28px;
+        }
+
+        .seat-number {
+            font-size: .7rem;
+        }
+
+        .bus-cabin {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .driver-icon {
+            width: 34px;
+            height: 34px;
+            font-size: 18px;
+        }
+
+        .front-windshield {
+            height: 48px;
+        }
+
+        .windshield-glass {
+            height: 38px;
+        }
+
+        .bus-title-icon {
+            width: 55px;
+            height: 55px;
+            font-size: 25px;
+        }
+    }
+
+</style>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const maxSeats = @passengers;
+
+        const pricePerSeat =
+            @Model.Price.ToString(
+            System.Globalization.CultureInfo.InvariantCulture
+            );
+
+        const checkboxes =
+            document.querySelectorAll(".seat-checkbox");
+
+        const selectedSeatsElement =
+            document.getElementById("selectedSeats");
+
+        const selectedCountElement =
+            document.getElementById("selectedCount");
+
+        const progressElement =
+            document.getElementById("seatProgress");
+
+        const totalPriceElement =
+            document.getElementById("totalPrice");
+
+        const continueButton =
+            document.getElementById("continueButton");
+
+
+        function updateSelection() {
+
+            const selected =
+                Array.from(checkboxes)
+                    .filter(function(checkbox) {
+                        return checkbox.checked;
+                    });
+
+
+            /*
+             * Если выбрано максимальное количество,
+             * блокируем остальные свободные места.
+             */
+
+            if (selected.length >= maxSeats) {
+
+                checkboxes.forEach(function(checkbox) {
+
+                    if (!checkbox.checked && !checkbox.disabled) {
+                        checkbox.disabled = true;
+                    }
+
+                });
+
+            }
+            else {
+
+                checkboxes.forEach(function(checkbox) {
+
+                    const seat =
+                        checkbox.closest(".seat");
+
+                    if (
+                        seat &&
+                        seat.classList.contains("seat-available") &&
+                        !checkbox.checked
+                    ) {
+                        checkbox.disabled = false;
+                    }
+
+                });
+
+            }
+
+
+            /*
+             * Номера выбранных мест
+             */
+
+            const seatNumbers =
+                selected.map(function(checkbox) {
+
+                    const seat =
+                        checkbox.closest(".seat");
+
+                    return seat
+                        .querySelector(".seat-number")
+                        .textContent
+                        .trim();
+
+                });
+
+
+            selectedCountElement.textContent =
+                selected.length;
+
+
+            if (seatNumbers.length === 0) {
+
+                selectedSeatsElement.textContent =
+                    "Пока не выбрано";
+
+            }
+            else {
+
+                selectedSeatsElement.textContent =
+                    seatNumbers.join(", ");
+
+            }
+
+
+            /*
+             * Progress
+             */
+
+            const progress =
+                Math.min(
+                    (selected.length / maxSeats) * 100,
+                    100
+                );
+
+            progressElement.style.width =
+                progress + "%";
+
+
+            /*
+             * Цена
+             */
+
+            const total =
+                selected.length * pricePerSeat;
+
+            totalPriceElement.textContent =
+                "€ " + total.toFixed(2);
+
+
+            /*
+             * Кнопка активна только тогда,
+             * когда выбрано ровно нужное количество.
+             */
+
+            continueButton.disabled =
+                selected.length !== maxSeats;
+
+        }
+
+
+        /*
+         * Обработка выбора мест
+         */
+
+        checkboxes.forEach(function(checkbox) {
+
+            checkbox.addEventListener("change", function() {
+
+                /*
+                 * Дополнительная защита:
+                 * больше пассажиров выбрать нельзя.
+                 */
+
+                const selectedCount =
+                    document.querySelectorAll(
+                        ".seat-checkbox:checked"
+                    ).length;
+
+                if (selectedCount > maxSeats) {
+
+                    checkbox.checked = false;
+
+                }
+
+                updateSelection();
+
+            });
+
+        });
+
+
+        updateSelection();
+
+    });
+
+</script>

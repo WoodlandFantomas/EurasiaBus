@@ -1,0 +1,164 @@
+﻿@model List<EurasiaBus.Controllers.FAQItem>
+
+@{
+    ViewData["Title"] = "Часто задаваемые вопросы";
+}
+
+<div class="container py-4">
+
+    <!-- Заголовок -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">
+            <i class="bi bi-question-circle-fill text-primary"></i>
+            Часто задаваемые вопросы
+        </h1>
+
+        <p class="text-muted mb-0">
+            Ответы на самые популярные вопросы о покупке билетов и поездках
+        </p>
+    </div>
+
+    <!-- FAQ -->
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <div class="accordion shadow-sm" id="faqAccordion">
+
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var item = Model[i];
+
+                    <div class="accordion-item mb-2 border rounded overflow-hidden">
+
+                        <h2 class="accordion-header" id="heading@(i)">
+
+                            <button class="accordion-button @(i == 0 ? "" : "collapsed") fw-semibold"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapse@(i)"
+                                    aria-expanded="@(i == 0 ? "true" : "false")"
+                                    aria-controls="collapse@(i)">
+
+                                <i class="bi bi-question-circle me-2 text-primary"></i>
+
+                                @item.Question
+
+                            </button>
+
+                        </h2>
+
+                        <div id="collapse@(i)"
+                             class="accordion-collapse collapse @(i == 0 ? "show" : "")"
+                             aria-labelledby="heading@(i)"
+                             data-bs-parent="#faqAccordion">
+
+                            <div class="accordion-body text-secondary">
+
+                                <i class="bi bi-info-circle me-2 text-primary"></i>
+
+                                @item.Answer
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Нижний блок -->
+    <div class="text-center mt-5">
+
+        <div class="card border-0 shadow-sm mx-auto"
+             style="max-width: 700px;">
+
+            <div class="card-body py-4">
+
+                <i class="bi bi-headset display-6 text-primary"></i>
+
+                <h4 class="mt-3">
+                    Не нашли ответ на свой вопрос?
+                </h4>
+
+                <p class="text-muted">
+                    Обратитесь в службу поддержки, и мы постараемся вам помочь.
+                </p>
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn btn-primary px-4">
+
+                    <i class="bi bi-house-door me-1"></i>
+                    Вернуться на главную
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+    .accordion-item {
+        transition: all 0.2s ease;
+    }
+
+        .accordion-item:hover {
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+    .accordion-button {
+        padding: 15px 18px;
+        font-size: 16px;
+    }
+
+        .accordion-button:not(.collapsed) {
+            color: #0d6efd;
+            background-color: #f4f8ff;
+            box-shadow: none;
+        }
+
+        .accordion-button:focus {
+            box-shadow: none;
+        }
+
+    .accordion-body {
+        padding: 18px 20px;
+        line-height: 1.6;
+    }
+
+    @@media (max-width: 576px) {
+
+        .accordion-button {
+            padding: 13px 14px;
+            font-size: 14px;
+        }
+
+        .accordion-body {
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        h1 {
+            font-size: 26px;
+        }
+    }
+
+</style>    
+
+
+
+
+
+
+
+
+

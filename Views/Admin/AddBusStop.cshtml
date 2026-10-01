@@ -1,0 +1,213 @@
+﻿@using EurasiaBus.Models
+@model BusStop
+
+@{
+    ViewData["Title"] = "Добавить остановку";
+}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8 col-xl-7">
+
+            <!-- Заголовок -->
+            <div class="text-center mb-4">
+
+                <div class="display-5 text-primary mb-2">
+                    <i class="bi bi-geo-alt-fill"></i>
+                </div>
+
+                <h1 class="fw-bold text-primary">
+                    Добавить остановку
+                </h1>
+
+                <p class="text-muted mb-0">
+                    Добавление автобусной остановки EURASIA BUS
+                </p>
+
+            </div>
+
+
+            <!-- Форма -->
+            <div class="card border-0 shadow-lg">
+
+                <div class="card-header bg-primary text-white py-3">
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+
+                        Информация об остановке
+
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <form asp-controller="Admin"
+                          asp-action="AddBusStop"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="alert alert-danger"
+                             role="alert">
+                        </div>
+
+
+                        <!-- Название -->
+                        <div class="mb-4">
+
+                            <label asp-for="Name"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-signpost-2-fill text-primary me-1"></i>
+
+                                Название остановки
+
+                            </label>
+
+                            <input asp-for="Name"
+                                   class="form-control form-control-lg"
+                                   placeholder="Например: Zachodnia Bus Station" />
+
+                            <span asp-validation-for="Name"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <!-- Город -->
+                            <div class="col-md-6">
+
+                                <label asp-for="City"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-buildings text-primary me-1"></i>
+
+                                    Город
+
+                                </label>
+
+                                <input asp-for="City"
+                                       class="form-control"
+                                       placeholder="Например: Warsaw" />
+
+                                <span asp-validation-for="City"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+
+                            <!-- Страна -->
+                            <div class="col-md-6">
+
+                                <label asp-for="Country"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-globe-europe-africa text-primary me-1"></i>
+
+                                    Страна
+
+                                </label>
+
+                                <input asp-for="Country"
+                                       class="form-control"
+                                       placeholder="Например: Poland" />
+
+                                <span asp-validation-for="Country"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Адрес -->
+                        <div class="mt-4 mb-4">
+
+                            <label asp-for="Address"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-map text-primary me-1"></i>
+
+                                Адрес
+
+                            </label>
+
+                            <textarea asp-for="Address"
+                                      class="form-control"
+                                      rows="3"
+                                      placeholder="Введите полный адрес автобусной станции"></textarea>
+
+                            <span asp-validation-for="Address"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <!-- Кнопки -->
+                        <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg">
+
+                                <i class="bi bi-check-circle me-1"></i>
+
+                                Добавить остановку
+
+                            </button>
+
+
+                            <a asp-controller="Admin"
+                               asp-action="BusStops"
+                               class="btn btn-outline-secondary btn-lg">
+
+                                <i class="bi bi-arrow-left me-1"></i>
+
+                                Отмена
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <!-- Информация -->
+            <div class="alert alert-info border-0 shadow-sm mt-4">
+
+                <i class="bi bi-info-circle-fill me-2"></i>
+
+                Остановка будет доступна для выбора при создании
+                автобусного рейса.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}
+
