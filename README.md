@@ -38,6 +38,9 @@ Password: `Admin123!`
 
 Change the password immediately for a real deployment.
 Скрины:
+
+<img width="1255" height="819" alt="image" src="https://github.com/user-attachments/assets/4261e26f-d9f4-425f-b937-caa125e18206" />
+
 <img width="980" height="876" alt="image" src="https://github.com/user-attachments/assets/b7fc9d32-ce7e-47bc-a7df-bb72f4d849e3" />
 <img width="1164" height="747" alt="image" src="https://github.com/user-attachments/assets/8a2fd6fc-8bf0-46c5-bd25-38150cbf69e9" />
 
